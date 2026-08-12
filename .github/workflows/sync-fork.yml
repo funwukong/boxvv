@@ -1,0 +1,24 @@
+name: 自动同步Fork上游仓库
+on:
+  # 定时执行：UTC每天凌晨0点（北京时间早8点）
+  schedule:
+    - cron: '0 0 * * *'
+  # 允许手动在Actions页面点击运行
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 同步上游仓库
+        uses: dabreadman/sync-upstream-repo@v1.3.0
+        with:
+          # ========== 这里改成你的原仓库地址 ==========
+          upstream_repo: FGBLH/HKL
+          # 原仓库主分支，大部分是main，老项目是master
+          upstream_branch: main
+          # 你fork仓库要同步的分支
+          downstream_branch: main
+          token: ${{ secrets.SYNC_PAT }}
+          # 同步方式：merge 合并 / rebase 变基（推荐rebase，提交历史更干净）
+          merge_args: --rebase
